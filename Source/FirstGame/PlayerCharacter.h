@@ -21,8 +21,12 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void Respawn();
+
 private:
-	UPROPERTY(EditAnywhere) UCameraComponent* camera;
+	UPROPERTY(VisibleAnywhere) UCameraComponent* camera;
+
+	UPROPERTY(EditAnywhere) FVector respawnLocation;
 
 	UPROPERTY(EditAnywhere) UInputAction* moveAction;
 	UPROPERTY(EditAnywhere) UInputAction* lookAction;
