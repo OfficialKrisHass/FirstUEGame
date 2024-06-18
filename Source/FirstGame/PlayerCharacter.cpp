@@ -1,10 +1,11 @@
 #include "PlayerCharacter.h"
+#include "WeaponComponent.h"
 
-#include "Camera/CameraComponent.h"
-#include "Components/CapsuleComponent.h"
+#include <Camera/CameraComponent.h>
+#include <Components/CapsuleComponent.h>
 
-#include "EnhancedInputComponent.h"
-#include "InputActionValue.h"
+#include <EnhancedInputComponent.h>
+#include <InputActionValue.h>
 
 DEFINE_LOG_CATEGORY(LogCharacter);
 
@@ -17,11 +18,17 @@ APlayerCharacter::APlayerCharacter() {
 	camera->SetRelativeLocation(FVector(-10.f, 0.f, 60.f));
 	camera->bUsePawnControlRotation = true;
 
+	weapon = CreateDefaultSubobject<UWeaponComponent>(TEXT("Weapon"));
+	weapon->SetupAttachment(camera);
+
 }
 
 void APlayerCharacter::BeginPlay() {
 
 	Super::BeginPlay();
+
+	if (weapon == nullptr) return;
+	weapon->Attach(this);
 
 }
 

@@ -8,6 +8,8 @@
 DECLARE_LOG_CATEGORY_EXTERN(LogCharacter, Log, All);
 
 class UCameraComponent;
+class UWeaponComponent;
+
 class UInputAction;
 struct FInputActionValue;
 
@@ -23,8 +25,11 @@ public:
 
 	void Respawn();
 
+	inline UCameraComponent* GetCameraComponent() const { return camera; }
+
 private:
 	UPROPERTY(VisibleAnywhere) UCameraComponent* camera;
+	UPROPERTY(VisibleAnywhere) UWeaponComponent* weapon;
 
 	UPROPERTY(EditAnywhere) FVector respawnLocation;
 
