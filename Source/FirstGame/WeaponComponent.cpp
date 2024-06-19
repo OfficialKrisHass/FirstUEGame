@@ -1,7 +1,9 @@
 #include "WeaponComponent.h"
 #include "PlayerCharacter.h"
+#include "BreakableActor.h"
 
 #include <Engine/GameEngine.h>
+#include <Kismet/GameplayStatics.h>
 
 #include <Camera/CameraComponent.h>
 
@@ -41,9 +43,12 @@ void UWeaponComponent::Attach(APlayerCharacter* character) {
 
 void UWeaponComponent::Fire(const FInputActionValue& actionValue) {
 
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Weapon Fired"));
+	// Play Sound
 
-	if (!actionValue.Get<bool>()) return;
+	if (fireSound)
+		UGameplayStatics::PlaySoundAtLocation(this, fireSound, m_character->GetActorLocation());
+
+	// Fire trace
 
 	FCollisionQueryParams params = FCollisionQueryParams(FName(TEXT("Fire params")), true, m_character);
 	params.bReturnPhysicalMaterial = false;
@@ -53,8 +58,20 @@ void UWeaponComponent::Fire(const FInputActionValue& actionValue) {
 	FVector start = m_character->GetCameraComponent()->GetComponentLocation();
 	FVector end = start + (m_character->GetCameraComponent()->GetForwardVector() * 1500.0f);
 	if (!GetWorld()->LineTraceSingleByChannel(hit, start, end, ECollisionChannel::ECC_GameTraceChannel2, params)) return;
+	if (!hit.GetActor()->IsRootComponentMovable()) return;
 
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, hit.GetActor()->GetName());
-	hit.GetComponent()->AddImpulse(m_character->GetCameraComponent()->GetForwardVector() * 1000.0f * impactStrength);
+	// Add Impulse
+
+	UPrimitiveComponent* hitComponent = Cast<UPrimitiveComponent>(hit.GetActor()->GetRootComponent());
+	if (hitComponent == nullptr) return;
+
+	hitComponent->AddImpulse(m_character->GetCameraComponent()->GetForwardVector() * 1000.0f * impactStrength);
+
+	// Attempt to Hit the actor if breakable
+
+	ABreakableActor* breakableActor = Cast<ABreakableActor>(hit.GetActor());
+	if (breakableActor == nullptr) return;
+
+	breakableActor->Hit(damage);
 
 }

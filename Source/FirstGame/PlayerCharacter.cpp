@@ -49,12 +49,6 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* playerInputCom
 
 }
 
-void APlayerCharacter::Respawn() {
-
-	SetActorLocation(respawnLocation);
-
-}
-
 void APlayerCharacter::Move(const FInputActionValue& actionValue) {
 
 	if (Controller == nullptr) return;

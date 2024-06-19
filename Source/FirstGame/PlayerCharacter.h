@@ -23,8 +23,6 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void Respawn();
-
 	inline UCameraComponent* GetCameraComponent() const { return camera; }
 
 private:

@@ -22,9 +22,11 @@ public:
 	virtual void TickComponent(float deltaTime, ELevelTick tickType, FActorComponentTickFunction* thisTickFunction) override;
 
 private:
+	UPROPERTY(EditAnywhere) float damage = 30.0f;
 	UPROPERTY(EditAnywhere) float impactStrength = 10.0f;
 
 	UPROPERTY(EditAnywhere) UInputAction* fireAction;
+	UPROPERTY(EditAnywhere) USoundBase* fireSound;
 
 	APlayerCharacter* m_character;
 
